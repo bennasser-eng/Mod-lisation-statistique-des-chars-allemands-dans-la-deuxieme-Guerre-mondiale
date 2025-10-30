@@ -1,0 +1,652 @@
+---
+title: "CR_PMS_Bennasser_Hasbouni_Mouret"
+author: "Bennasser, Hasbouni, Mouret"
+date: "04/04/2025"
+output:
+  html_document: default
+  pdf_document: default
+header-includes:
+- \usepackage{amsfonts, amsmath, amssymb, amstext, latexsym}
+- \usepackage{graphicx, epsfig}
+- \usepackage[french]{babel}
+- \usepackage{exscale}
+- \usepackage{amsbsy}
+- \usepackage{amsopn}
+- \usepackage{fancyhdr}
+- \usepackage{dsfont}
+- \usepackage{hyperref}
+- \newcommand{\noi}{\noindent}
+- \newcommand{\dsp}{\displaystyle}
+- "\\newcommand{\\ind}{{{\\large 1} \\hspace*{-1.6mm} {\\large 1}}}"
+---
+# Le problème des chars d’assaut allemands
+## Partie 1 - Tirage avec remise
+
+On considère une variable aléatoire $X$ suivant une loi uniforme discrète sur $\{1, \dots, \theta\}$ et que pour tout $k \in \{1, \ldots, \theta\}$, $$P(X=k ; \theta) = \frac{1}{\theta} \, \mathbb{1}{\{1, \ldots, \theta\}}(k).$$
+
+1.  Calculer l'espérance et la variance de $X$.
+
+$$ E[X]=\sum_{k=1}^{\theta} kP(X=k; \theta) = \sum_{k=1}^{\theta} k \frac{1}{\theta} = \frac{1}{\theta} \frac{\theta(\theta+1)}{2}$$ $$\boxed{E[X]=\frac{\theta+1}{2}}$$
+
+$$ E[X^2] = \sum_{k=1}^{\theta} k^2 P(X=k; \theta) = \frac{1}{\theta}\sum_{k=1}^{\theta} k^2 = \frac{(\theta+1)(2\theta+1)}{6}$$ alors : 
+$$ \begin{align*} Var[X] &= \frac{(\theta+1)(2\theta+1)}{6} - \left(\frac{\theta+1}{2}\right)^2 \\
+&= \frac{2(\theta+1)(2\theta+1)}{12} - \frac{3(\theta +1)^2}{12}\\
+&= \frac{(\theta+1) [2(2\theta+1)-3(\theta+1)]}{12}\\
+&= \frac{(\theta+1)(\theta-1)}{12}
+\end{align*}$$$$ \boxed{Var[X]=\frac{\theta^2-1}{12}} $$
+
+2.  Calculer l'estimateur des moments $\tilde{\theta}_n$ de $\theta$. Montrer que cet estimateur est sans biais et calculer sa variance.
+
+ $X_1,...,X_n$ sont des réalisations indépendantes et de même loi ${\cal U}_{\{1,\ldots,\theta\}}$
+
+  D'après la méthode des moments: $$\boxed{\tilde{\theta}_n = 2 \bar{X}_n -1 }\text{ ,
+   } \bar{X}_n = \frac{1}{n} \sum_{i=1}^{n} X_i$$
+De plus, 
+
+$$ E[\tilde{\theta}_n] = E[2 \bar{X}_n - 1] = 2 E[\bar{X}_n] - 1 $$
+Or, $E[\bar{X}_n] = E[X] = \frac{\theta + 1}{2}$, donc :
+
+$$E[\tilde{\theta}_n] = 2 \times \frac{\theta + 1}{2} - 1 = \theta$$
+
+  Ainsi, $\tilde{\theta}_n$ est un estimateur sans biais.
+
+  On a : $$Var(\tilde{\theta}_n) = Var(2 \bar{X}_n - 1) = 4 Var(\bar{X}_n)$$
+
+  La variance de la moyenne empirique est : $$Var(\bar{X}_n) = \frac{Var(X)}{n} = \frac{\theta^2 - 1}{12n}$$
+
+  Donc :$$\boxed{Var(\tilde{\theta}_n) = 4 \times \frac{\theta^2 - 1}{12n} = \frac{\theta^2 - 1}{3n}}$$
+
+3.  Calculer la fonction de répartition de $X$. Calculer la médiane de la loi de $X$ et en déduire un estimateur $\tilde{\theta}'_n$ de $\theta$ basé sur la médiane empirique.
+
+-   Fonction de répartition de $X$:$$F_X(x)=P(X \le x)= 
+    \begin{cases}
+    0, & \text{si } x \le 0 \\
+    \sum_{k=1}^{x} P(X=k) = \frac{x}{\theta}, & \text{si } 0 \le x \le\theta \\ 
+    1,& \text{si } x\geq \theta
+    \end{cases}
+    $$
+
+-   Mediane de X:
+
+    $mediane(X)= \frac{\theta+1}{2}$
+
+-   Estimateur $\tilde{\theta}'_n$:
+
+On en déduit $\tilde{\theta}'_n$ = $2mediane(X)-1$
+
+4.  Soit $X_n^*$ le maximum des observations. Calculer la fonction de répartition de $X_n^*$ et les probabilités élémentaires $P(X_n^*=k ; \theta)$, $\forall k \in \{1, \ldots, \theta\}$.
+
+- Fonction de répartition : 
+    $$\begin{align*}F_{X_n^*} &= P(X_n^* \le k)\\ 
+    &=P(\bigcap_{i=1}^n
+    (X_i\le k) )\\
+    &= \prod_{i=1}^{n} P(X_i \le k) \text{, par indépendance des } X_i\\
+    &= \left(\frac{k}{\theta} \right)^n
+    \end{align*}$$
+    - Probabilités élémentaires
+$$\begin{align*}
+P(X_n^*=k)&= P(X_n^* \le k) - P(X_n^* \le k-1) \\
+&=\left(\frac{k}{\theta} \right)^n - \left(\frac{k-1}{\theta} \right)^n  \\
+&= \frac{k^n - \left(k-1 \right)^n}{\theta^n}
+\end{align*}$$
+5.  Montrer que l'estimateur de maximum de vraisemblance de $\theta$ est $\hat{\theta}_n=X_n^*$. Montrer qu'il est biaisé mais qu'on ne peut pas le débiaiser facilement.
+
+$$\begin{align*}
+L(\theta;x_1,...,x_n) &= \prod_{i=1}^{n}P(X=x_i; \theta) \\
+&=\prod_{i=1}^{n} \frac{1}{\theta} \mathbb{1}_{1\le x_i \le \theta}  \\
+&= \frac{\mathbb{1}_{max\{X_i\}\le\theta}}{\theta^n}
+\end{align*}$$
+$L(\theta;x_1,...,x_n)$ étant décroissante, on cherche à minimiser $\theta$  tel que $\theta \ge X_i^*$ .
+
+On en déduit : $$\hat\theta_n = X_n^*$$
+Or $$\begin{align*} 
+E[\hat{\theta}_n] &= E[X_n^*]\\
+&= \sum_{k=1}^{\theta} k \frac{k^n - \left(k-1 \right)^n}{\theta^n}\text{, d'après 4.}\\
+&= \theta - \sum_{j=1}^{\theta-1}\left(\frac{j}{\theta}\right)^n
+\end{align*}
+$$
+	Comme $\sum_{j=1}^{\theta-1}\left(\frac{j}{\theta}\right)^n$ est stictement positif, l'estimateur est biaisé et difficilement débiaisable puique le terme dépends de $\theta$ .
+
+6. Expliquer comment construire le graphe de probabilités pour la loi uniforme discrète. En déduire un estimateur graphique $\theta_g$ de $\theta$.
+
+La fonction de répartition est une fonction affine avec de pente $\frac1\theta$ et passant par l'origine. On peut ainsi faire une régression linéaire et estimer $\theta_{graphique} = \frac1{pente}$ .
+
+7. Simuler un échantillon de taille $n=100$ d'une loi ${\cal U}_{\{1,\ldots,\theta\}}$, avec $\theta=1000$. Tracer un histogramme et le graphe de probabilités pour la loi uniforme discrète. Calculez les 5 estimations de $\theta$. Commentez les résultats.
+
+```{r}
+# Simulation d'un échantillon de taille n=100 d'une loi uniforme U{1, ..., theta}
+n <- 100
+theta <- 1000
+echantillon <- sample(1:theta,n,replace=T)
+
+
+# Histogramme de l'échantillon
+hist(echantillon, breaks = 20,col = "lightblue",
+     main = "Histogramme de l'échantillon d'une loi uniforme U{1, ..., theta}", xlab = "Valeurs", ylab = "Fréquence")
+
+```
+
+```{r}
+# Graphe de probabilité
+valeurs_uniques <- sort(unique(echantillon))
+freqs_cumul <- cumsum(table(echantillon) / n)
+
+plot(valeurs_uniques, freqs_cumul, type = "p", col = "red", pch = 16,
+     main = "Graphe de probabilité d'une loi uniforme U{1, ..., theta}",
+     xlab = "Valeurs observées", ylab = "Fréquence cumulée")
+
+modele <- lm(freqs_cumul ~ valeurs_uniques - 1)  # Régression linéaire
+abline(modele, col = "blue", lwd = 2) 
+```
+
+```{r}
+# Estimations de theta
+theta_moment <- 2*mean(echantillon) -1
+theta_mediane <- 2* median(echantillon) -1
+theta_max <- max(echantillon)
+theta_graphique <- as.numeric(1/coef(modele))  # On récupère la valeur de la pente
+theta_corrige <- ((theta_max)^(n+1) - (theta_max -1)^(n+1))/((theta_max)^n - (theta_max-1)^n)
+
+theta_values <- c(
+  "theta_moment" = theta_moment,
+  "theta_mediane" = theta_mediane,
+  "theta_max" = theta_max,
+  "theta_graphique" = theta_graphique,
+  "theta_corrige" = theta_corrige
+)
+
+print(theta_values)
+```
+
+D'après ces résultats, l'estimateur $\check{\theta}_n$ est le plus précis car il corrige le biais de l'estimateur du maximum de vraisemblance (EMV), $\check{\theta}_n$. Ce dernier est simple à calculer mais biaisé, il est toujours $≤ θ$. Les autres estimateurs semblent moins performants pour la petite taille d'échantillon actuelle, s'éloignant davantage de $\theta$. Néanmoins, leur précision devrait s'améliorer significativement avec l'augmentation de la taille de l'échantillon, se rapprochant alors de la vraie valeur $\theta$.
+
+8.Simuler $m=1000$ échantillons de taille $n$ d'une loi ${\cal U}_{\{1,\ldots,\theta\}}$, avec $\theta=1000$. Pour chaque échantillon, calculer les valeurs des 5 estimations de $\theta$. On obtient ainsi des échantillons de $m$ valeurs de chacun des 5 estimateurs. Evaluer le biais et l'erreur quadratique moyenne de ces estimateurs. Faites varier $n$. Qu'en concluez-vous ?
+
+```{r}
+m <- 1000
+n <- 100
+theta <- 1000
+
+# Matrices pour stocker les estimateurs
+theta_moment <- numeric(m)
+theta_mediane <- numeric(m)
+theta_max <- numeric(m)
+theta_graphique <- numeric(m)
+theta_corrige <- numeric(m)
+
+# Simulation
+for (i in 1:m) {
+  echantillon <- sample(1:theta,n,replace=T)
+  
+  valeurs_uniques <- sort(unique(echantillon))
+  freqs_cumul <- cumsum(table(echantillon) / n)
+  
+  modele <- lm(freqs_cumul ~ valeurs_uniques - 1)  # Régression linéaire
+  
+  # Estimations de theta
+  theta_moment[i] <- 2*mean(echantillon) -1
+  theta_mediane[i] <- 2* median(echantillon) -1
+  theta_max[i] <- max(echantillon)
+  theta_graphique[i] <- as.numeric(1/coef(modele))  # On récupère la valeur de la pente
+  theta_corrige[i] <- ((theta_max[i])^(n+1) - (theta_max[i] -1)^(n+1))/((theta_max[i])^n - (theta_max[i]-1)^n)
+}
+
+
+# Fonction pour calculer le biais et l'EQM de chaque estimateur
+calcul_biais_EQM <- function(estimateur) {
+  biais <- mean(estimateur) - theta
+  eqm <- mean((estimateur - theta)^2)
+  return(c(Biais = biais, EQM = eqm))
+}
+
+stats_moment <- calcul_biais_EQM(theta_moment)
+stats_mediane <- calcul_biais_EQM(theta_mediane)
+stats_max <- calcul_biais_EQM(theta_max)
+stats_graphique <- calcul_biais_EQM(theta_graphique)
+stats_corrige <- calcul_biais_EQM(theta_corrige)
+
+# Résultats sous forme de tableau
+results <- rbind(
+  Moment = stats_moment,
+  Mediane = stats_mediane,
+  Maximum = stats_max,
+  Graphique = stats_graphique,
+  Corrige = stats_corrige
+)
+
+print(results)
+```
+
+L'estimateur corrigé $\check{\theta}_n$ est le plus performant, avec un biais très faible et une Erreur Quadratique Moyenne (EQM) faible, et ce même si $n$ diminue.
+
+Cependant, si $n$ augmente :
+* Pour  $n = 1000$ , $\hat{\theta}_n$ a un biais très faible et une EQM d'environ 1.
+* Pour $n = 10000$ (où $n >> \theta$), le biais et l'EQM de $\hat{\theta}_n$deviennent nuls, car la probabilité que la valeur maximale de l'échantillon soit $\theta$ est très élevée.
+
+Les autres estimateurs ont aussi un biais très faible mais conservent une EQM élevée par rapport à $\check{\theta}_n$ et $\hat{\theta}_n$.
+
+
+9.  Déterminer un intervalle de confiance asymptotique de seuil $\alpha$ pour $\theta$ c'est-à-dire un intervalle aléatoire $I_n$ tel que $\lim_{n \rightarrow \infty} P(\theta \in I_n)=1-\alpha.$ 
+	Calculer l'intervalle de confiance asymptotique de seuil 5% pour les données simulées dans la question 7.
+
+D'après le TCL : $$\sqrt{n}\frac{\bar X_n - \frac{(\theta+1)}{2}}{S_n'} \rightarrow \mathcal{N}(0,\,1)
+$$
+
+Alors, $$
+P\left(\left\lvert\sqrt{n}\frac{\bar X_n - \frac{(\theta+1)}{2}}{S_n'}\right\rvert\le U_\alpha\right) = 1-\alpha 
+$$
+
+Or  $$
+\left\lvert\sqrt{n}\frac{\bar X_n - \frac{(\theta+1)}{2}}{S_n'}\right\rvert \le U_\alpha
+\Leftrightarrow \frac{n^2}{4}\theta^2+(\frac{1}{2}-\bar X_n)n² \theta+n²(\bar X_n^2-\bar X_n +\frac14)-U^2_\alpha n S_n'^2 \le 0
+$$
+$$\Delta = n³U_{\alpha}^2S_n'^2$$
+les racines du polynomes sont alors :
+$$
+2\bar X_n-1 \pm \frac{2}{n^2}\sqrt\Delta  = \tilde{\theta}_n\pm 2 \frac{U_\alpha S_n'}{\sqrt n}
+$$
+
+L'intervalle de confiance est donc :
+
+$$
+IC = \left[\tilde{\theta}_n- 2 \frac{U_\alpha S_n'}{\sqrt n},\tilde{\theta}_n+ 2 \frac{U_\alpha S_n'}{\sqrt n}\right]
+$$
+```{r}
+n <- 100
+alpha <- 0.05
+U_alpha <- qnorm(1 - alpha/2)  # Quantile de la loi normale
+
+theta <- 1000
+echantillon <- sample(1:theta, n, replace = T)
+
+# Calcul de la moyenne et de l'écart-type empirique
+mean_X <- mean(echantillon)
+sd_X <- sd(echantillon)
+
+# Calcul de theta_moment
+theta_moment <- 2 * mean_X - 1
+
+# Calcul de l'intervalle de confiance
+IC_bas <- theta_moment - 2 * (U_alpha * sd_X / sqrt(n))
+IC_haut <- theta_moment + 2 * (U_alpha * sd_X / sqrt(n))
+
+# Affichage des résultats
+cat("Intervalle de confiance à 95%: [", IC_bas, ",", IC_haut, "]\n")
+
+
+```
+
+10. Simuler $m=1000$ échantillons de taille $n$ d'une loi ${\cal U}_{\{1,\ldots,\theta\}}$, pour $n=10$ et $n=1000$. Calculer le pourcentage de fois où l'intervalle de confiance de seuil $\alpha$ pour $\theta$ contient la vraie valeur du paramètre $\theta$. Faire varier $\alpha$ et conclure.
+
+```{r}
+m <- 1000
+n_values <- c(10, 1000)
+alpha_values <- c(0.01, 0.05, 0.1)
+theta <- 1000
+
+# Fonction pour estimer theta et vérifier si l'intervalle de confiance contient theta
+calcul_IC <- function(n, alpha) {
+  U_alpha <- qnorm(1 - alpha/2)  # Quantile de la loi normale
+  cpt <- 0
+  
+  for (i in 1:m) {
+    echantillon <- sample(1:theta, n, replace = T)
+    mean_X <- mean(echantillon)
+    sd_X <- sd(echantillon)
+    theta_moment <- 2 * mean_X - 1
+    
+    IC_bas <- theta_moment - 2 * (U_alpha * sd_X / sqrt(n))
+    IC_haut <- theta_moment + 2 * (U_alpha * sd_X / sqrt(n))
+    
+    if (IC_bas <= theta && theta <= IC_haut) {
+      cpt <- cpt + 1
+    }
+  }
+  
+  return(cpt / m * 100)
+}
+
+# Simulation pour différentes valeurs de n et alpha
+results <- expand.grid(n = n_values, alpha = alpha_values)
+results$Pourcentage <- mapply(calcul_IC, results$n, results$alpha)
+
+# Affichage des résultats
+print(results)
+
+```
+
+Plus le nombre de données augmente, plus la probabilité que $\theta$ soit contenu dans l'intervalle de confiance augmente.  De même, plus $\alpha$ est petit, plus l'intervalle de confiance est large.
+
+## Partie 2 - Tirage sans remise
+
+## Lois des estimateurs et EMV
+
+### 1. Lois des variables
+
+Pour un tirage sans remise de $n$ chars parmi $\theta$ :
+
+-   **Loi du premier char** ($X_1$) :\
+    $$P(X_1 = x_1) = \frac{1}{\theta},\quad x_1 \in \{1,...,\theta\}$$
+
+    Chaque char a la même probabilité d'être tiré initialement.
+
+-   **Loi du deuxième char** ($X_2$) :\
+    $$P(X_2 = x_2) = \frac{1}{\theta -1}, \quad x_2 \in \{1,...,\theta\}\setminus\{x_1\}$$
+
+    Après avoir tiré le premier char, il reste $\theta-1$ possibilités équiprobables.
+
+-   **Loi conditionnelle générale** :\
+    $$P(X_k = x_k | X_1,...,X_{k-1}) = \frac{1}{\theta - k + 1}$$
+
+    À chaque étape, on retire un char du pool possible.
+
+### 2. Estimateur du Maximum de Vraisemblance (EMV)
+
+La fonction de vraisemblance :
+
+$$L(\theta; x_1,...,x_n) = \prod_{k=1}^n P(X_k=x_k) = \frac{(\theta-n)!}{\theta!}$$
+
+$L(\theta) = 0$ si $\theta < X_n^*$ (incompatible avec l'observation):
+
+Pour $\theta \geq X_n^*$, $L(\theta)$ est strictement décroissante
+
+donc ; L'EMV est $\hat\theta_n = X_n^* = \max(X_1,...,X_n)$.
+
+## Loi de $X_n^*$
+
+### Démonstration de la loi
+
+Pour $k \in \{n,...,\theta\}$ :
+
+$$P(X_n^* = k) = \frac{\binom{k-1}{n-1}}{\binom{\theta}{n}}$$
+
+-   Au dénominateur : tous les échantillons possibles ($\binom{\theta}{n}$)
+
+-   Au numérateur : échantillons où le max vaut exactement $k$
+
+### Calcul de l'espérance
+
+En utilisant l'identité combinatoire :
+
+$$\sum_{k=n}^\theta \binom{k}{n} = \binom{\theta+1}{n+1}$$
+
+On obtient après simplification :
+
+$$E[X_n^*] = \frac{n(\theta+1)}{n+1}$$
+
+## Les quatres estimateurs
+
+### 1. EMV (biaisé)
+
+$$\hat\theta_{EMV} = X_n^*$$
+
+Biais : $E[\hat\theta_{EMV}] - \theta = -\frac{\theta}{n+1}$
+
+### 2. EMVSB (sans biais)
+
+$$\hat\theta_{EMVSB} = \frac{n+1}{n}X_n^* - 1$$
+
+Corrige exactement le biais.
+
+### 3. Estimateur symétrique
+
+$$\hat\theta_{sym} = X_n^* + X_1^* - 1$$
+
+Biais résiduel (ne depend pas de $\theta$) : $\frac{n-1}{n+1}$
+
+### 4. Estimateur par Remise
+
+L'estimateur par remise est donné par :
+
+$$\theta_{remise} = \frac{X_n^{*(n+1)} - (X_n^* - 1)^{n+1}}{X_n^{*n} - (X_n^* - 1)^n}$$
+
+où $X_n^* = \max(X_1,...,X_n)$ est la valeur maximale observée.
+
+
+## Analyse pour n = 5
+
+```{r simulation-n5, echo=FALSE, results='asis'}
+# Paramètres de simulation
+valeur_reelle <- 100
+taille_echantillon <- 5
+nombre_replications <- 100
+
+# Initialisation
+estimateur_EMV <- numeric(nombre_replications)
+estimateur_EMVSB <- numeric(nombre_replications)
+estimateur_symetrique <- numeric(nombre_replications)
+estimateur_remise <- numeric(nombre_replications)
+
+# Simulation
+set.seed(123)
+for (i in 1:nombre_replications) {
+  echantillon <- sample(1:valeur_reelle, taille_echantillon)
+  max_val <- max(echantillon)
+  min_val <- min(echantillon)
+  
+  estimateur_EMV[i] <- max_val
+  estimateur_EMVSB[i] <- ((taille_echantillon+1)/taille_echantillon)*max_val - 1
+  estimateur_symetrique[i] <- max_val + min_val - 1
+  
+  # Nouvel estimateur avec remise
+  numerator <- max_val^(taille_echantillon+1) - (max_val-1)^(taille_echantillon+1)
+  denominator <- max_val^taille_echantillon - (max_val-1)^taille_echantillon
+  estimateur_remise[i] <- numerator / denominator
+}
+
+# Résultats
+resultats_n5 <- data.frame(
+  Estimateur = c("EMV", "EMVSB", "Symétrique", "Avec remise"),
+  Moyenne = c(mean(estimateur_EMV), mean(estimateur_EMVSB), 
+              mean(estimateur_symetrique), mean(estimateur_remise)),
+  Biais = c(mean(estimateur_EMV)-valeur_reelle, mean(estimateur_EMVSB)-valeur_reelle, 
+            mean(estimateur_symetrique)-valeur_reelle, mean(estimateur_remise)-valeur_reelle),
+  Variance = c(var(estimateur_EMV), var(estimateur_EMVSB), 
+              var(estimateur_symetrique), var(estimateur_remise))
+)
+
+knitr::kable(resultats_n5, digits = 2)
+
+# Graphiques
+par(mfrow = c(1,3), mar = c(5,4,4,1), oma = c(0,0,2,0))
+
+# Moyennes
+barplot(resultats_n5$Moyenne, names.arg = resultats_n5$Estimateur,
+        col = c("#FF6B6B", "#4ECDC4", "#45B7D1", "#A593E0"),
+        main = "Moyennes des estimateurs",
+        ylab = "Valeur moyenne",
+        ylim = c(0, 120))
+abline(h = valeur_reelle, col = "red", lty = 2)
+
+# Biais
+barplot(resultats_n5$Biais, names.arg = resultats_n5$Estimateur,
+        col = c("#FF6B6B", "#4ECDC4", "#45B7D1", "#A593E0"),
+        main = "Biais des estimateurs",
+        ylab = "Valeur du biais")
+abline(h = 0, col = "black")
+
+# Variance
+barplot(resultats_n5$Variance, names.arg = resultats_n5$Estimateur,
+        col = c("#FF6B6B", "#4ECDC4", "#45B7D1", "#A593E0"),
+        main = "Variance des estimateurs",
+        ylab = "Variance")
+
+mtext(paste("Performance des estimateurs (n =", taille_echantillon, ")"), outer = TRUE)
+par(mfrow = c(1,1))
+
+# Paramètres de simulation
+taille_echantillon <- 15
+
+# Initialisation
+estimateur_EMV <- numeric(nombre_replications)
+estimateur_EMVSB <- numeric(nombre_replications)
+estimateur_symetrique <- numeric(nombre_replications)
+estimateur_remise <- numeric(nombre_replications)
+
+# Simulation
+set.seed(123)
+for (i in 1:nombre_replications) {
+  echantillon <- sample(1:valeur_reelle, taille_echantillon)
+  max_val <- max(echantillon)
+  min_val <- min(echantillon)
+  
+  estimateur_EMV[i] <- max_val
+  estimateur_EMVSB[i] <- ((taille_echantillon+1)/taille_echantillon)*max_val - 1
+  estimateur_symetrique[i] <- max_val + min_val - 1
+  
+  # Nouvel estimateur avec remise
+  numerator <- max_val^(taille_echantillon+1) - (max_val-1)^(taille_echantillon+1)
+  denominator <- max_val^taille_echantillon - (max_val-1)^taille_echantillon
+  estimateur_remise[i] <- numerator / denominator
+}
+
+# Résultats
+resultats_n15 <- data.frame(
+  Estimateur = c("EMV", "EMVSB", "Symétrique", "Avec remise"),
+  Moyenne = c(mean(estimateur_EMV), mean(estimateur_EMVSB), 
+              mean(estimateur_symetrique), mean(estimateur_remise)),
+  Biais = c(mean(estimateur_EMV)-valeur_reelle, mean(estimateur_EMVSB)-valeur_reelle, 
+            mean(estimateur_symetrique)-valeur_reelle, mean(estimateur_remise)-valeur_reelle),
+  Variance = c(var(estimateur_EMV), var(estimateur_EMVSB), 
+              var(estimateur_symetrique), var(estimateur_remise))
+)
+
+knitr::kable(resultats_n15, digits = 2)
+
+# Graphiques
+par(mfrow = c(1,3), mar = c(5,4,4,1), oma = c(0,0,2,0))
+
+# Moyennes
+barplot(resultats_n15$Moyenne, names.arg = resultats_n15$Estimateur,
+        col = c("#FF6B6B", "#4ECDC4", "#45B7D1", "#A593E0"),
+        main = "Moyennes des estimateurs",
+        ylab = "Valeur moyenne",
+        ylim = c(0, 120))
+abline(h = valeur_reelle, col = "red", lty = 2)
+
+# Biais
+barplot(resultats_n15$Biais, names.arg = resultats_n15$Estimateur,
+        col = c("#FF6B6B", "#4ECDC4", "#45B7D1", "#A593E0"),
+        main = "Biais des estimateurs",
+        ylab = "Valeur du biais")
+abline(h = 0, col = "black")
+
+# Variance
+barplot(resultats_n15$Variance, names.arg = resultats_n15$Estimateur,
+        col = c("#FF6B6B", "#4ECDC4", "#45B7D1", "#A593E0"),
+        main = "Variance des estimateurs",
+        ylab = "Variance")
+
+mtext(paste("Performance des estimateurs (n =", taille_echantillon, ")"), outer = TRUE)
+par(mfrow = c(1,1))
+
+cat("
+# --------------------------------------------------
+
+# COMPARAISON DES ESTIMATEURS AVEC ET SANS REMISE
+
+# --------------------------------------------------
+
+
+1. L'estimateur avec remise donne des résultats très différents car :
+   - Il suppose que le même char peut être observé plusieurs fois
+   - La formule mathématique est fondamentalement différente
+
+2. Dans notre cas réel (tirage sans remise) :
+   - L'estimateur EMVSB reste le meilleur (sans biais)
+   - L'estimateur avec remise introduit un biais important
+
+3. Conclusion :
+   - Il est crucial d'utiliser le bon modèle (sans remise ici)
+   - L'approximation avec remise conduit à des estimations erronées
+
+-   Pour n < 5 : EMVSB ou Estimateur par Remise
+
+-   Pour 5 ≤ n ≤ 15 : EMVSB (simplicité) ou Remise (précision)
+
+-   Pour n > 15 : EMV (car biais devient négligeable)
+
+-   pour lestimateur eymetrique ; il est bien intuitif mais ne donne pas grande chose , il est à eviter
+")
+
+
+## Partie 3 - Estimation du nombre d’iPhones 3G produits
+
+## Question 1:
+
+```{r cars}
+getwd()
+iPhones <- read.table("iPhones.csv", sep=";", header=T)
+names(iPhones)
+attach(iPhones)
+
+
+TAC <- data.frame(
+  Code_TAC = c(161200, 161300, 161400, 171200, 171300, 171400, 174200, 174300, 
+               174400, 177100, 177300, 177400, 177500, 177600, 180900),
+  Numero_TAC = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+)
+
+iPhones$Code_TAC <- as.numeric(substring(iPhones$IMEI, 3, 8))
+iPhones <- merge(iPhones, TAC, by = "Code_TAC", all.x=TRUE)
+iPhones$SNR <- as.numeric(substring(iPhones$IMEI, 9, 13))*10
+iPhones$NS <- (iPhones$Numero_TAC - 1) * 10^6 + iPhones$SNR
+```
+
+## Question 2:
+
+On utilise l'estimateur de l'exercice 2
+
+```{r }
+NS_max <- max(iPhones$NS, na.rm=TRUE)
+n <- nrow(iPhones)
+Nombre_iPhones <- ((n+1)/n) * NS_max-1
+cat("La production totale est estimée à :", Nombre_iPhones, "\n")
+
+```
+
+## Question 3:
+
+On trace l'histogramme à classes de mêmes effectifs:
+
+```{r}
+x <- as.numeric(substring(iPhones$IMEI, 8, 13)) 
+x_ord <- sort(x)
+
+a0 <- min(x_ord) - 100 
+an <- max(x_ord) + 100  
+
+n <- 8
+bornes <- seq(a0, an, length.out = n + 1)  
+
+# 4. Plot the histogram
+hist(x_ord, 
+     breaks = bornes,
+     prob = TRUE,
+     main = "Histogramme à classes de mêmes effectifs",
+     col = "lightblue",
+     border = "black",
+     xlim = c(a0, an))  
+
+```
+
+L'histogramme ne permet pas de conclure, on utilise donc le test de Kolmogorov-Smirnov:
+
+```{r}
+ks_test <- ks.test(x, "punif", min(x), max(x))
+print(ks_test)
+```
+
+$p-value > 0.05$ donc on ne peut pas rejeter l'hypothèse d'uniformité.
+
+On suppose que la distribution des numéros de série est uniforme, alors qu'en pratique, il se peut que différentes plages de numéros de série soient utilisées par différentes régions, usines ou périodes. Ainsi, la répartition uniforme peut ne pas refléter fidèlement la réalité de la gestion des numéros de série et il faut examiner les méthodes plus précisément afin de pouvoir confirmer ou rejeter l'hypothèse d'uniformité.
+
+## Question 4:
+
+Pour estimer la production par périodes de 4 semaines, on regroupe les données par paquets de 4 semaines et on estime le nombre d'appareils produits pour chaque groupe en appliquant le deuxième estimateur à NS, et en soustrayant à chaque résultat le précédent pour obtenir la production par tranche.
+
+## Question 5:
+
+La méthode statistique du problème des chars allemands permet d'estimer avec beaucoup de précision le volume de production des iPhones 3G à partir de leurs numéros de série, même avec la troncature des derniers chiffres, ce qui valide l'hypothèse d'uniformité qu'on n'a pas pu rejeter dans la question 3.
+
+
